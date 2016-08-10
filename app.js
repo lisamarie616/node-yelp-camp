@@ -11,19 +11,6 @@ mongoose.connect("mongodb://localhost/yelp_camp");
 app.use(bodyParser.urlencoded({extended:true}));
 app.set('view engine', 'ejs');
 
-// Campground.create({
-//     name: 'Granite Hill',
-//     image: 'https://pixabay.com/static/uploads/photo/2013/09/16/19/15/camp-182951__180.jpg',
-//     description: 'This is a huge granite hill, no bathrooms. No water. Beautiful granite!'
-//   }, function(err, campground){
-//   if(err){
-//     console.log(err)
-//   } else {
-//     console.log("newly created campground:");
-//     console.log(campground);
-//   }
-// });
-
 app.get('/', function(req, res){
   res.render('landing');
 });
@@ -58,10 +45,11 @@ app.post('/campgrounds', function(req, res){
 });
 
 app.get('/campgrounds/:id', function(req, res){
-  Campground.findById(req.params.id, function(err, foundCampground){
+  Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
     if(err){
       console.log(err);
     } else {
+      console.log(foundCampground);
       res.render('show', {campground: foundCampground});
     }
   });
